@@ -44,31 +44,34 @@ document.addEventListener("DOMContentLoaded",() => {
         if(cart.length){
             emptyCartMessage.classList.add('hidden');
             cartTotalMessage.classList.remove('hidden');
+            checkOutBtn.classList.remove('hidden');
             cart.forEach((item,index) => {
+
                 totalPrice+=item.price
+
                 const cartItem = document.createElement('div')
                 cartItem.classList.add("cart")
                 cartItem.innerHTML = `
                 ${item.name} - $${item.price.toFixed(2)}
-                <button>delete</delete>`
-
+                <button data-id=${item.id}>delete</delete>`
                 cartItems.appendChild(cartItem);
-                totalPriceDisplay.innerText = `${totalPrice.toFixed(2)}`;
-
-                // cartItem.querySelector("button").addEventListener("click", (e) => {
-                //     e.stopPropagation();
-                //    // tasks = tasks.filter((t) => t.id !== task.id);
-                //    cart = cart.filter((c) => {c.id !== cart.id;
-                //     console.log(c)
-                //    });
-                //    cartItem.remove(cart);
-                //    console.log(cart);
-                //    })
-
+               
+               cartItems.addEventListener('click', (e) => {
+                 if(e.target.tagName ==="BUTTON"){
+                    const cartId = parseInt(e.target.getAttribute('data-id'))
+                    cart = cart.filter(c => c.id !== cartId)
+                    if(cart.length == 0){
+                        totalPriceDisplay.innerText = '0.00';
+                        checkOutBtn.classList.add('hidden');
+                        
+                    }
+                    renderCart();
+                 }
+               })
                     
             
             })
-
+            totalPriceDisplay.innerText = `${totalPrice.toFixed(2)}`;
         }else{
             emptyCartMessage.classList.remove('hidden');
         }
@@ -81,6 +84,7 @@ document.addEventListener("DOMContentLoaded",() => {
         totalPriceDisplay.innerText = '0.00'
         alert("Checkout Successfully")
         renderCart();
+           
     })
 
 });
